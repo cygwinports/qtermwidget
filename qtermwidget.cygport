@@ -1,0 +1,71 @@
+inherit qt4-cmake qt5
+
+NAME="qtermwidget"
+VERSION=0.6.0
+RELEASE=1
+CATEGORY="Libs"
+SUMMARY="Terminal emulation widget for Qt"
+DESCRIPTION="QTermWidget provides a unicode-enabled, embeddable Qt widget for
+using as a built-in console (or terminal emulation widget)."
+HOMEPAGE="https://github.com/qterminal/qtermwidget"
+SRC_URI="https://github.com/qterminal/qtermwidget/releases/download/${VERSION}/qtermwidget-${VERSION}.tar.xz"
+PATCH_URI="
+	http://pkgs.fedoraproject.org/cgit/qtermwidget.git/plain/qtermwidget-0.6.0-qt-virt-manager.patch
+	0.6.0-cmake-install.patch
+	0.6.0-cygwin-bin-sh.patch
+	0.6.0-cygwin-kpty.patch
+"
+
+PKG_NAMES="libqtermwidget4_0 libqtermwidget4-devel libqtermwidget5_0 libqtermwidget5-devel"
+libqtermwidget4_0_SUMMARY="${SUMMARY}4"
+libqtermwidget4_0_CONTENTS="
+	usr/bin/cygqtermwidget4-0.dll
+	usr/share/doc/${NAME}4/
+	usr/share/${NAME}4/
+"
+libqtermwidget4_devel_SUMMARY="${SUMMARY}4"
+libqtermwidget4_devel_CONTENTS="
+	usr/include/qtermwidget4/
+	usr/lib/libqtermwidget4.dll.a
+	usr/lib/pkgconfig/qtermwidget4.pc
+	usr/lib/qt4/plugins/designer/
+	usr/share/cmake/qtermwidget4/
+"
+libqtermwidget5_0_SUMMARY="${SUMMARY}5"
+libqtermwidget5_0_CONTENTS="
+	usr/bin/cygqtermwidget5-0.dll
+	usr/share/doc/${NAME}5/
+	usr/share/${NAME}5/
+"
+libqtermwidget5_0_SUMMARY="${SUMMARY}5"
+libqtermwidget5_devel_CONTENTS="
+	usr/include/qtermwidget5/
+	usr/lib/libqtermwidget5.dll.a
+	usr/lib/pkgconfig/qtermwidget5.pc
+	usr/share/cmake/qtermwidget5/
+"
+
+src_compile() {
+	mkdir -p ${B}/qt4
+	cd ${B}/qt4
+	qt4_cmake_compile
+
+	mkdir -p ${B}/qt5
+	cd ${B}/qt5
+	# designer plugin not yet ported to qt5
+	cygcmake -DUSE_QT5=ON -DBUILD_DESIGNER_PLUGIN=OFF
+	cygmake
+}
+
+src_install() {
+	cd ${B}/qt4
+	cyginstall
+	cd ${B}/qt5
+	cyginstall
+
+	cd ${S}
+	docinto /${NAME}4
+	dodoc AUTHORS COPYING README
+	docinto /${NAME}5
+	dodoc AUTHORS COPYING README
+}

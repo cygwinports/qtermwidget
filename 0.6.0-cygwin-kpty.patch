@@ -1,0 +1,61 @@
+--- origsrc/qtermwidget-0.6.0/lib/kpty.cpp	2014-10-21 10:47:40.000000000 -0500
++++ src/qtermwidget-0.6.0/lib/kpty.cpp	2015-05-10 14:57:39.387361000 -0500
+@@ -32,6 +32,12 @@
+ #define HAVE_LIBUTIL_H
+ #endif
+ 
++#ifdef __CYGWIN__
++#define HAVE_PTY_H
++#define HAVE_OPENPTY
++#define HAVE_PTSNAME
++#endif
++
+ #ifdef __sgi
+ #define __svr4__
+ #endif
+@@ -216,7 +222,7 @@ bool KPty::open()
+     if (::openpty( &d->masterFd, &d->slaveFd, ptsn, 0, 0)) {
+         d->masterFd = -1;
+         d->slaveFd = -1;
+-        qWarning(175) << "Can't open a pseudo teletype";
++        qWarning() << "Can't open a pseudo teletype";
+         return false;
+     }
+     d->ttyName = ptsn;
+--- origsrc/qtermwidget-0.6.0/lib/kptydevice.cpp	2015-05-10 15:06:32.922110100 -0500
++++ src/qtermwidget-0.6.0/lib/kptydevice.cpp	2015-05-10 14:59:45.180547400 -0500
+@@ -40,6 +40,7 @@
+ #include <termios.h>
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
++#include <sys/socket.h>
+ #ifdef HAVE_SYS_FILIO_H
+ # include <sys/filio.h>
+ #endif
+@@ -50,7 +51,7 @@
+ #if defined(Q_OS_FREEBSD) || defined(Q_OS_MAC)
+   // "the other end's output queue size" - kinda braindead, huh?
+ # define PTY_BYTES_AVAILABLE TIOCOUTQ
+-#elif defined(TIOCINQ)
++#elif defined(TIOCINQ) && !defined(Q_OS_CYGWIN)
+   // "our end's input queue size"
+ # define PTY_BYTES_AVAILABLE TIOCINQ
+ #else
+@@ -91,7 +92,7 @@ bool KPtyDevicePrivate::_k_canRead()
+     int available;
+ #endif
+     if (!::ioctl(q->masterFd(), PTY_BYTES_AVAILABLE, (char *) &available)) {
+-#ifdef Q_OS_SOLARIS
++#if defined(Q_OS_SOLARIS) || defined(Q_OS_CYGWIN)
+         // A Pty is a STREAMS module, and those can be activated
+         // with 0 bytes available. This happens either when ^C is
+         // pressed, or when an application does an explicit write(a,b,0)
+@@ -113,7 +114,7 @@ bool KPtyDevicePrivate::_k_canRead()
+ #endif
+ 
+         char *ptr = readBuffer.reserve(available);
+-#ifdef Q_OS_SOLARIS
++#if defined(Q_OS_SOLARIS) || defined(Q_OS_CYGWIN)
+         // Even if available > 0, it is possible for read()
+         // to return 0 on Solaris, due to 0-byte writes in the stream.
+         // Ignore them and keep reading until we hit *some* data.

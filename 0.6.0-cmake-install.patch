@@ -1,0 +1,23 @@
+--- origsrc/qtermwidget-0.6.0/CMakeLists.txt	2014-10-21 10:47:40.000000000 -0500
++++ src/qtermwidget-0.6.0/CMakeLists.txt	2014-11-25 22:30:49.066617600 -0600
+@@ -136,7 +136,10 @@ if(APPLE)
+     set_target_properties( ${QTERMWIDGET_LIBRARY_NAME} PROPERTIES INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR} )
+ endif()
+ 
+-install(TARGETS ${QTERMWIDGET_LIBRARY_NAME} DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++install(TARGETS ${QTERMWIDGET_LIBRARY_NAME}
++        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+ install(FILES ${HDRS_DISTRIB} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${QTERMWIDGET_LIBRARY_NAME}")
+ # keyboard layouts
+ install(DIRECTORY lib/kb-layouts/ DESTINATION "${KB_LAYOUT_DIR}" FILES_MATCHING PATTERN "*.keytab" )
+@@ -178,7 +181,7 @@ if (BUILD_DESIGNER_PLUGIN)
+     qt4_add_resources(DESIGNER_QRC lib/designer/qtermwidgetplugin.qrc)
+ 
+     link_directories(${CMAKE_BINARY_DIR})
+-    add_library(qtermwidget4plugin SHARED
++    add_library(qtermwidget4plugin MODULE
+         ${DESIGNER_MOC}
+         ${DESIGNER_QRC}
+         ${DESIGNER_SRC}
