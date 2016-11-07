@@ -1,0 +1,11 @@
+--- origsrc/qtermwidget-0.7.0/lib/Pty.h	2016-09-23 17:50:57.000000000 -0500
++++ src/qtermwidget-0.7.0/lib/Pty.h	2016-11-07 00:04:11.300055500 -0600
+@@ -31,6 +31,8 @@
+ #ifndef PTY_H
+ #define PTY_H
+ 
++#include_next <pty.h>
++
+ // Qt
+ #include <QStringList>
+ #include <QVector>

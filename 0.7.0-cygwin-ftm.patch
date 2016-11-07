@@ -1,0 +1,49 @@
+--- origsrc/qtermwidget-0.7.0/lib/BlockArray.cpp	2016-09-23 17:50:57.000000000 -0500
++++ src/qtermwidget-0.7.0/lib/BlockArray.cpp	2016-11-06 23:59:40.323537000 -0600
+@@ -21,6 +21,7 @@
+ 
+ */
+ 
++#define _POSIX_C_SOURCE 1
+ #include <QtDebug>
+ 
+ // Own
+--- origsrc/qtermwidget-0.7.0/lib/Pty.cpp	2016-09-23 17:50:57.000000000 -0500
++++ src/qtermwidget-0.7.0/lib/Pty.cpp	2016-11-06 23:19:00.428067400 -0600
+@@ -26,6 +26,7 @@
+     02110-1301  USA.
+ */
+ 
++#define _DEFAULT_SOURCE
+ // Own
+ #include "Pty.h"
+ 
+--- origsrc/qtermwidget-0.7.0/lib/kpty.cpp	2016-11-06 23:14:39.960227300 -0600
++++ src/qtermwidget-0.7.0/lib/kpty.cpp	2016-11-07 00:01:10.500139800 -0600
+@@ -22,6 +22,7 @@
+    Boston, MA 02110-1301, USA.
+ */
+ 
++#define _XOPEN_SOURCE
+ #include "kpty_p.h"
+ 
+ #include <QtDebug>
+@@ -219,7 +220,7 @@ bool KPty::open()
+ #ifdef HAVE_OPENPTY
+ 
+     char ptsn[PATH_MAX];
+-    if (::openpty( &d->masterFd, &d->slaveFd, ptsn, 0, 0)) {
++    if (openpty( &d->masterFd, &d->slaveFd, ptsn, 0, 0)) {
+         d->masterFd = -1;
+         d->slaveFd = -1;
+         qWarning() << "Can't open a pseudo teletype";
+--- origsrc/qtermwidget-0.7.0/lib/kptydevice.cpp	2016-11-06 23:14:39.960227300 -0600
++++ src/qtermwidget-0.7.0/lib/kptydevice.cpp	2016-11-07 10:30:44.522983300 -0600
+@@ -29,6 +29,7 @@
+    Boston, MA 02110-1301, USA.
+ */
+ 
++#define _GNU_SOURCE
+ #include "kptydevice.h"
+ #include "kpty_p.h"
+ 
