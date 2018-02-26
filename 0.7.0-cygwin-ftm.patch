@@ -4,7 +4,7 @@
  
  */
  
-+#define _POSIX_C_SOURCE 1
++#define _XOPEN_SOURCE 500
  #include <QtDebug>
  
  // Own
@@ -18,6 +18,16 @@
  // Own
  #include "Pty.h"
  
+--- origsrc/qtermwidget-0.8.0/lib/konsole_wcwidth.cpp	2017-10-21 14:01:23.000000000 -0500
++++ src/qtermwidget-0.8.0/lib/konsole_wcwidth.cpp	2018-02-26 14:19:46.906292000 -0600
+@@ -7,6 +7,7 @@
+  * Markus Kuhn -- 2001-01-12 -- public domain
+  */
+ 
++#define _XOPEN_SOURCE
+ #include <QString>
+ 
+ #ifdef HAVE_UTF8PROC
 --- origsrc/qtermwidget-0.7.0/lib/kpty.cpp	2016-11-06 23:14:39.960227300 -0600
 +++ src/qtermwidget-0.7.0/lib/kpty.cpp	2016-11-07 00:01:10.500139800 -0600
 @@ -22,6 +22,7 @@

@@ -1,16 +1,16 @@
-inherit qt4-cmake qt5
+inherit qt5 cmake
 
 NAME="qtermwidget"
-VERSION=0.7.0
+VERSION=0.8.0
 RELEASE=1
 CATEGORY="Libs"
 SUMMARY="Terminal emulation widget for Qt"
 DESCRIPTION="QTermWidget provides a unicode-enabled, embeddable Qt widget for
 using as a built-in console (or terminal emulation widget)."
 HOMEPAGE="http://lxqt.org/"
-SRC_URI="http://downloads.lxqt.org/qtermwidget/${VERSION}/${NAME}-${VERSION}.tar.xz"
+SRC_URI="http://downloads.lxqt.org/downloads/qtermwidget/${VERSION}/${NAME}-${VERSION}.tar.xz"
 PATCH_URI="
-	0.6.0-cmake-install.patch
+	0.8.0-cmake-install.patch
 	0.6.0-cygwin-bin-sh.patch
 	0.6.0-cygwin-kpty.patch
 	0.7.0-case-insensitive.patch
@@ -31,3 +31,7 @@ libqtermwidget5_devel_CONTENTS="
 	usr/lib/pkgconfig/qtermwidget5.pc
 	usr/share/cmake/qtermwidget5/
 "
+
+DIFF_EXCLUDES="translations"
+
+CYGCMAKE_ARGS+=" -DPULL_TRANSLATIONS=OFF"
